@@ -94,15 +94,16 @@ class Artifact(Node):
         self.platform = node.get('platform', '')
         self.bundle = node.get('bundle', '')
         for c4 in node:
+            val = c4.text.strip()
             if c4.tag == 'location':
-                self.locations.append(c4.text)
+                self.locations.append(val)
             elif c4.tag == 'checksum':
-                self.checksum[c4.get('type')] = c4.text
+                self.checksum[c4.get('type')] = val
             elif c4.tag == 'size':
                 if c4.get('type') == 'download':
-                    self.size['download'] = int(c4.text)
+                    self.size['download'] = int(val)
                 elif c4.get('type') == 'installed':
-                    self.size['installed'] = int(c4.text)
+                    self.size['installed'] = int(val)
 
 
 class Release(Node):
@@ -144,7 +145,7 @@ class Release(Node):
                 self.description.parse_tree(c3)
             elif c3.tag == 'url':
                 t = c3.get('type', 'details')
-                self.url = {t: c3.text}
+                self.url = {t: c3.text.strip()}
             elif c3.tag == 'artifacts':
                 for c4 in c3:
                     a = Artifact()
@@ -177,7 +178,7 @@ class Image(Node):
         self.type = node.get('type', '')
         self.width = int(node.get('width', 0))
         self.height = int(node.get('height', 0))
-        self.url = node.text
+        self.url = node.text.strip()
 
 
 class Screenshot(Node):
@@ -240,7 +241,7 @@ class Provide(Node):
             if c2.tag in self.TYPES:
                 attr = self.TYPES[c2.tag]
                 current = getattr(self, attr)
-                current.append(c2.text)
+                current.append(c2.text.strip())
                 setattr(self, attr, current)
 
 
@@ -253,7 +254,7 @@ class ContentRating(Node):
         self.type = node.get('type', 'oars-1.0')
         for c2 in node:
             if c2.tag == 'content_attribute' and 'id' in c2.attrib:
-                self.attributes[c2.get('id')] = c2.text
+                self.attributes[c2.get('id')] = c2.text.strip()
 
     def serialize(self):
         return {self.type: self.attributes}

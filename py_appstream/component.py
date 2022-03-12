@@ -74,8 +74,9 @@ class Component(Node):
         if self.type == 'desktop':
             self.type = 'desktop-application'
         for c1 in root:
+            val = c1.text.strip()
             if c1.tag in self.JUST_TEXT:
-                setattr(self, c1.tag, c1.text)
+                setattr(self, c1.tag, val)
             elif c1.tag in self.TO_LOCALIZE:
                 utils.localize(getattr(self, c1.tag), c1)
             elif c1.tag in self.TO_PARSE_TREE:
@@ -90,7 +91,7 @@ class Component(Node):
             elif c1.tag == 'icon':
                 t = c1.get('type')
                 if t == 'stock':
-                    self.icon[t] = c1.text
+                    self.icon[t] = val
                 elif t in ['cached', 'local', 'remote']:
                     if t not in self.icon:
                         self.icon[t] = []
@@ -99,26 +100,26 @@ class Component(Node):
                         if k in c1.attrib:
                             icon_obj[k] = int(c1.get(k))
                     k = 'url' if t == 'remote' else 'name'
-                    icon_obj[k] = c1.text
+                    icon_obj[k] = val
                     self.icon[t].append(icon_obj)
             elif c1.tag == 'categories':
                 for c2 in c1:
                     if c2.tag == 'category':
-                        self.categories.append(c2.text)
+                        self.categories.append(c2.text.strip())
             elif c1.tag == 'url':
                 k = c1.attrib.get('type', 'homepage')
-                self.url[k] = c1.text
+                self.url[k] = val
             elif c1.tag == 'launchable':
                 t = c1.get('type')
                 if t not in self.launchable:
                     self.launchable[t] = []
-                self.launchable[t].append(c1.text)
+                self.launchable[t].append(val)
             elif c1.tag == 'custom':
                 for c2 in c1:
                     if c2.tag == 'value' and 'key' in c2.attrib:
-                        self.custom[c2.get('key')] = c2.text
+                        self.custom[c2.get('key')] = c2.text.strip()
             elif c1.tag == 'pkgname':
-                self.pkgname = c1.text
+                self.pkgname = val
             elif c1.tag == 'keywords':
                 lang = c1.get('{http://www.w3.org/XML/1998/namespace}lang', c1.attrib.get('lang', 'C'))
                 kw = []
@@ -127,7 +128,7 @@ class Component(Node):
                         kw.append(c2.text.strip())
                 self.keywords[lang] = kw
             elif c1.tag == 'extends':
-                self.extends.append(c1.text)
+                self.extends.append(val)
 
     def serialize(self):
         obj = {}
