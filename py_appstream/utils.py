@@ -4,7 +4,8 @@
 def localize(out_obj, node, f=None):
     lang = node.get('{http://www.w3.org/XML/1998/namespace}lang', node.get('lang', 'C'))
     if lang != 'x-test':
-        out_obj[lang] = f(node.text) if f else node.text.strip()
+        val = node.text.strip()
+        out_obj[lang] = f(val) if f else val
 
 
 def join_lines(txt: str):
