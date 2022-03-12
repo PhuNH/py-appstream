@@ -34,12 +34,16 @@ class Description(Node):
         return lang
 
     def parse_tree(self, node):
+        lang_part_counts = {}
         for n in node:
             if n.tag == 'p':
                 lang = self._prep_lang(n)
                 if lang == 'x-test':
                     continue
-                self.object[lang] += f'<p>{utils.join_lines(n.text)}</p>\n'
+                if lang not in lang_part_counts:
+                    lang_part_counts[lang] = 0
+                self.object[lang] += f'<p>{n.text}</p>\n'
+                lang_part_counts[lang] += 1
             elif n.tag in ['ol', 'ul']:
                 langs = set()
                 for c in n:
@@ -47,10 +51,13 @@ class Description(Node):
                         lang = self._prep_lang(c)
                         if lang == 'x-test':
                             continue
+                        if lang not in lang_part_counts:
+                            lang_part_counts[lang] = 0
                         langs.add(lang)
                         if not (self.object[lang].endswith('</li>\n') or self.object[lang].endswith(f'<{n.tag}>\n')):
                             self.object[lang] += f'<{n.tag}>\n'
-                        self.object[lang] += f'<li>{utils.join_lines(c.text)}</li>\n'
+                        self.object[lang] += f'  <li>{c.text}</li>\n'
+                        lang_part_counts[lang] += 1
                     else:
                         raise AppStreamParseError(f'Expected <li> in <{n.tag}>, got <{c.tag}>')
                 for lang in langs:
@@ -58,10 +65,8 @@ class Description(Node):
             else:
                 raise AppStreamParseError(f'Expected <p>, <ul>, <ol> in <{node.tag}>, got <{n.tag}>')
         # only accept languages with number of parts not less than number of 'C' parts
-        lang_part_counts = list(map(lambda item: (item[0], len(item[1].split('\n'))), self.object.items()))
-        # max_part_count = max(lang_part_counts, key=lambda x: x[1])[1]
-        c_part_count = len(self.object['C'].split('\n'))
-        unfit_langs = list(map(lambda p: p[0], filter(lambda p: p[1] < c_part_count, lang_part_counts)))
+        unfit_langs = list(map(lambda p: p[0], filter(lambda p: p[1] < lang_part_counts['C'],
+                                                      lang_part_counts.items())))
         for lang in unfit_langs:
             self.object.pop(lang)
         for lang in self.object:

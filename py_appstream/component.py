@@ -76,7 +76,7 @@ class Component(Node):
             if c1.tag in self.JUST_TEXT:
                 setattr(self, c1.tag, c1.text)
             elif c1.tag in self.TO_LOCALIZE:
-                utils.localize(getattr(self, c1.tag), c1, utils.join_lines)
+                utils.localize(getattr(self, c1.tag), c1)
             elif c1.tag in self.TO_PARSE_TREE:
                 setattr(self, c1.tag, self.TO_PARSE_TREE[c1.tag]())
                 (getattr(getattr(self, c1.tag), 'parse_tree'))(c1)
@@ -117,7 +117,7 @@ class Component(Node):
                     if c2.tag == 'value' and 'key' in c2.attrib:
                         self.custom[c2.get('key')] = c2.text
             elif c1.tag == 'pkgname':
-                self.pkgname = utils.join_lines(c1.text)
+                self.pkgname = c1.text
             elif c1.tag == 'keywords':
                 lang = c1.get('{http://www.w3.org/XML/1998/namespace}lang', c1.attrib.get('lang', 'C'))
                 kw = []
