@@ -23,9 +23,10 @@ class ComponentTestCase(unittest.TestCase):
     def test_description(self):
         desc = self.component.description
         self.assertEqual({'C', 'ca', 'ko'}, set(desc.object.keys()), 'Only fully translated languages are included')
-        ca_parts = desc.object['ca'].split('\n')
-        conditions = (ca_parts[0].startswith('<p>') and ca_parts[6].startswith('<p>') and ca_parts[2].startswith('<li>')
-                      and ca_parts[3].startswith('<li>') and ca_parts[4].startswith('<li>'))
+        ca_parts = desc.object['ca'].split('>\n')
+        conditions = (ca_parts[0].startswith('<p>') and ca_parts[6].startswith('<p>') and
+                      ca_parts[2].startswith('  <li>') and ca_parts[3].startswith('  <li>') and
+                      ca_parts[4].startswith('  <li>'))
         self.assertTrue(conditions, 'First and last parts are paragraphs, middle parts are list items')
 
     def test_releases(self):
