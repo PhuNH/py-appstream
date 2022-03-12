@@ -74,7 +74,7 @@ class Component(Node):
         if self.type == 'desktop':
             self.type = 'desktop-application'
         for c1 in root:
-            val = c1.text.strip()
+            val = c1.text.strip() if c1.text else ''
             if c1.tag in self.JUST_TEXT:
                 setattr(self, c1.tag, val)
             elif c1.tag in self.TO_LOCALIZE:
