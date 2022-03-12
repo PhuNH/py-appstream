@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import html
+
 import dateutil.parser
 
 from . import utils
@@ -42,7 +44,7 @@ class Description(Node):
                     continue
                 if lang not in lang_part_counts:
                     lang_part_counts[lang] = 0
-                self.object[lang] += f'<p>{n.text}</p>\n'
+                self.object[lang] += f'<p>{html.escape(n.text.strip())}</p>\n'
                 lang_part_counts[lang] += 1
             elif n.tag in ['ol', 'ul']:
                 langs = set()
@@ -56,7 +58,7 @@ class Description(Node):
                         langs.add(lang)
                         if not (self.object[lang].endswith('</li>\n') or self.object[lang].endswith(f'<{n.tag}>\n')):
                             self.object[lang] += f'<{n.tag}>\n'
-                        self.object[lang] += f'  <li>{c.text}</li>\n'
+                        self.object[lang] += f'  <li>{html.escape(c.text.strip())}</li>\n'
                         lang_part_counts[lang] += 1
                     else:
                         raise AppStreamParseError(f'Expected <li> in <{n.tag}>, got <{c.tag}>')
@@ -207,6 +209,9 @@ class Screenshot(Node):
                 obj[serial_a] = self.source.serialize() if a == 'source' \
                     else [x.serialize() for x in self.thumbnails] if a == 'thumbnails' \
                     else v
+        # appstreamcli always includes 'thumbnails'
+        if 'thumbnails' not in obj:
+            obj['thumbnails'] = []
         # video
         return obj
 
