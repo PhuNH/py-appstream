@@ -20,6 +20,12 @@ class ComponentTestCase(unittest.TestCase):
         # with open('test.yaml', 'w') as f_yaml:
         #     yaml.dump(component.serialize(), f_yaml, allow_unicode=True)
 
+    def test_extends(self):
+        extends = self.component.extends
+        self.assertEqual('org.kde.krusader.desktop', extends[2])
+        # serialization
+        self.assertEqual(4, len(self.obj['Extends']))
+
     def test_description(self):
         desc = self.component.description
         self.assertEqual({'C', 'ca', 'ko'}, set(desc.object.keys()), 'Only fully translated languages are included')
@@ -78,7 +84,7 @@ class ComponentTestCase(unittest.TestCase):
         self.assertEqual(4, len(self.component.screenshots))
         self.assertEqual(3, len(self.component.releases))
         # serialization
-        self.assertEqual(16, len(self.obj.keys()))
+        self.assertEqual(17, len(self.obj.keys()))
         self.assertEqual(4, len(self.obj['Keywords']['C']))
 
 
