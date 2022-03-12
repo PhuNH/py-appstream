@@ -59,6 +59,7 @@ class Component(Node):
         self.pkgname = ''
         self.keywords = {}
         # languages, bundle
+        self.extends = []
 
     def parse_tree(self, node):
         if isinstance(node, str):
@@ -125,6 +126,8 @@ class Component(Node):
                     if c2.tag == 'keyword':
                         kw.append(c2.text.strip())
                 self.keywords[lang] = kw
+            elif c1.tag == 'extends':
+                self.extends.append(c1.text)
 
     def serialize(self):
         obj = {}

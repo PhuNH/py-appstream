@@ -52,6 +52,10 @@
         <p xml:lang="ko">GCompris에는 100개 이상의 활동이 들어 있으며 더 많은 활동을 개발하고 있습니다. GCompris는 자유 소프트웨어이며, 필요에 따라서 활동을 개선할 수 있으며 전 세계의 사람들과 공유할 수 있습니다.</p>
         <p xml:lang="x-test">xxCurrently GCompris offers in excess of 100 activities and more are being developed. GCompris is free software, that means that you can adapt it to your own needs, improve it and, most importantly, share it with children everywhere.xx</p>
     </description>
+    <extends>org.kde.dolphin.desktop</extends>
+    <extends>org.kde.konqueror.desktop</extends>
+    <extends>org.kde.krusader.desktop</extends>
+    <extends>org.kde.gwenview.desktop</extends>
     <keywords>
         <keyword>internet</keyword>
         <keyword>web</keyword>
