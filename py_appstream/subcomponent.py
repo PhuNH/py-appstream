@@ -99,7 +99,7 @@ class Artifact(Node):
 
 
 class Release(Node):
-    not_to_serialize = ['timestamp', 'date']
+    NOT_TO_SERIALIZE = ['timestamp', 'date']
 
     def __init__(self):
         self.version = ''
@@ -147,7 +147,7 @@ class Release(Node):
     def serialize(self):
         obj = {}
         for a, v in vars(self).items():
-            if a not in type(self).not_to_serialize and v:
+            if a not in type(self).NOT_TO_SERIALIZE and v:
                 serial_a = 'unix-timestamp' if a == 'unix_timestamp' else a
                 obj[serial_a] = self.description.serialize() if a == 'description' \
                     else [x.serialize() for x in self.artifacts] if a == 'artifacts' \
@@ -156,7 +156,7 @@ class Release(Node):
 
 
 class Image(Node):
-    not_to_serialize = ['type']
+    NOT_TO_SERIALIZE = ['type']
 
     def __init__(self):
         self.type = ''
