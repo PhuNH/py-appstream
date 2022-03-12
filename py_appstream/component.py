@@ -123,7 +123,7 @@ class Component(Node):
                 kw = []
                 for c2 in c1:
                     if c2.tag == 'keyword':
-                        kw.append(c2.text)
+                        kw.append(c2.text.strip())
                 self.keywords[lang] = kw
 
     def serialize(self):
