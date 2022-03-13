@@ -44,7 +44,7 @@ class Description(Node):
                     continue
                 if lang not in lang_part_counts:
                     lang_part_counts[lang] = 0
-                self.object[lang] += f'<p>{html.escape(n.text.strip(), quote=False)}</p>\n'
+                self.object[lang] += f'<p>{html.escape(n.text, quote=False)}</p>\n'
                 lang_part_counts[lang] += 1
             elif n.tag in ['ol', 'ul']:
                 langs = set()
@@ -58,7 +58,7 @@ class Description(Node):
                         langs.add(lang)
                         if not (self.object[lang].endswith('</li>\n') or self.object[lang].endswith(f'<{n.tag}>\n')):
                             self.object[lang] += f'<{n.tag}>\n'
-                        self.object[lang] += f'  <li>{html.escape(c.text.strip(), quote=False)}</li>\n'
+                        self.object[lang] += f'  <li>{html.escape(c.text, quote=False)}</li>\n'
                         lang_part_counts[lang] += 1
                     else:
                         raise AppStreamParseError(f'Expected <li> in <{n.tag}>, got <{c.tag}>')
