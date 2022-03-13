@@ -32,6 +32,7 @@
             <li xml:lang="x-test">xxcomputer discovery: keyboard, mouse, different mouse gestures, ...xx</li>
             <li>arithmetic: table memory, enumeration, mirror image, balance
                 the scale, change giving, ...</li>
+            <li xml:lang="br">Jediñ : deskiñ an taolennoù-jediñ, niveriñ eeun, simetriezh ar skeudenn, kempouezañ ar bouezerez, distreiñ ar moneiz, ...</li>
             <li xml:lang="ca">aritmètica: memoritzar la taula, enumeració, imatge al mirall, equilibrar la balança, donar el canvi...</li>
             <li xml:lang="de">Arithmetik: Kombitabellen, Aufzählungen, Bilder spiegeln, Gewichte ausgleichen, Wechselgeld geben...</li>
             <li xml:lang="es">aritmética: memorización de tablas, enumeración, imagen especular, equilibrar la balanza, devolver cambios...</li>
@@ -94,10 +95,10 @@
             <image width="1600" height="1040">https://gcompris.net/screenshots_qt/large/click_on_letter_up.png</image>
         </screenshot>
         <screenshot>
-            <caption>"Learning Clock" activity</caption>
-            <caption xml:lang="ca">Activitat «Rellotge d'aprenentatge»</caption>
+            <caption>Or the active <a href="https://krita-artists.org">Krita Artists community</a> after anchor</caption>
+            <caption xml:lang="ca">O l'actiu <a href="https://krita-artists.org">La comunitat d'artistes del Krita</a> anchor</caption>
             <caption xml:lang="ko">"시계 익히기" 활동</caption>
-            <caption xml:lang="x-test">xx"Learning Clock" activityxx</caption>
+            <caption xml:lang="x-test">xxOr the active <a href="https://krita-artists.org">xxKrita Artists communityxx</a>xx</caption>
             <image width="1600" height="1040">https://gcompris.net/screenshots_qt/large/clockgame.png</image>
         </screenshot>
         <screenshot>

@@ -49,6 +49,8 @@ class ComponentTestCase(unittest.TestCase):
         screenshots = self.component.screenshots
         self.assertTrue(screenshots[0].default)
         self.assertEqual({'C', 'de', 'ko', 'es', 'ca'}, set(screenshots[1].caption.keys()))
+        # XML elements inside caption
+        self.assertEqual('O l\'actiu La comunitat d\'artistes del Krita anchor', screenshots[2].caption['ca'])
         # serialization
         self.assertIn('source-image', self.obj['Screenshots'][0])
         self.assertEqual('https://gcompris.net/screenshots_qt/large/color_mix.png',
