@@ -60,10 +60,14 @@ class ComponentTestCase(unittest.TestCase):
 
     def test_provide(self):
         provide = self.component.provides
+        self.assertEqual({'binaries', 'mediatypes', 'dbus'}, set([k for k, v in vars(provide).items() if v]))
         self.assertEqual(1, len(getattr(provide, 'binaries')))
         self.assertEqual(8, len(getattr(provide, 'mediatypes')))
+        # only <dbus> tags with 'type' attribute of 'user' or 'system' are counted
+        self.assertEqual(1, len(getattr(provide, 'dbus')))
+        self.assertEqual('user', getattr(provide, 'dbus')[0]['type'])
         # serialization
-        self.assertEqual({'binaries', 'mediatypes'}, set(self.obj['Provides'].keys()))
+        self.assertEqual({'binaries', 'mediatypes', 'dbus'}, set(self.obj['Provides'].keys()))
 
     def test_content_rating(self):
         content_rating = self.component.content_rating
