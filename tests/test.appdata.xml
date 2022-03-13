@@ -119,6 +119,9 @@
         <mediatype>application/x-xpinstall</mediatype>
         <mediatype>x-scheme-handler/http</mediatype>
         <mediatype>x-scheme-handler/https</mediatype>
+        <dbus type="user">org.kde.kclockd</dbus>
+        <dbus type="actor">org.kde.kclockd</dbus>
+        <dbus>org.kde.kdeconnect</dbus>
     </provides>
     <releases>
         <release version="1.2" date="2014-04-12" urgency="high">

@@ -241,7 +241,11 @@ class Provide(Node):
             if c2.tag in self.TYPES:
                 attr = self.TYPES[c2.tag]
                 current = getattr(self, attr)
-                current.append(c2.text.strip())
+                if c2.tag == 'dbus':
+                    if 'type' in c2.attrib and c2.get('type') in ['user', 'system']:
+                        current.append({'type': c2.get('type'), 'service': c2.text.strip()})
+                else:
+                    current.append(c2.text.strip())
                 setattr(self, attr, current)
 
 
