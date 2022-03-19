@@ -14,7 +14,7 @@ from .exceptions import AppStreamParseError
 class Node(object):
     NOT_TO_SERIALIZE = []
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         pass
 
     def serialize(self):
@@ -29,17 +29,19 @@ class Description(Node):
     def __init__(self):
         self.object = {}
 
-    def _prep_lang(self, n):
+    def _prep_lang(self, n, lang_code_func):
         lang = n.get('{http://www.w3.org/XML/1998/namespace}lang', n.get('lang', 'C'))
-        if lang != 'x-test' and lang not in self.object:
-            self.object[lang] = ''
+        if lang != 'x-test':
+            lang = lang_code_func(lang) if lang_code_func else lang
+            if lang not in self.object:
+                self.object[lang] = ''
         return lang
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         lang_part_counts = {}
         for n in node:
             if n.tag == 'p':
-                lang = self._prep_lang(n)
+                lang = self._prep_lang(n, lang_code_func)
                 if lang == 'x-test':
                     continue
                 if lang not in lang_part_counts:
@@ -50,7 +52,7 @@ class Description(Node):
                 langs = set()
                 for c in n:
                     if c.tag == 'li':
-                        lang = self._prep_lang(c)
+                        lang = self._prep_lang(c, lang_code_func)
                         if lang == 'x-test':
                             continue
                         if lang not in lang_part_counts:
@@ -66,8 +68,9 @@ class Description(Node):
                     self.object[lang] += f'</{n.tag}>\n'
             else:
                 raise AppStreamParseError(f'Expected <p>, <ul>, <ol> in <{node.tag}>, got <{n.tag}>')
-        # only accept languages with number of parts not less than number of 'C' parts
-        unfit_langs = list(map(lambda p: p[0], filter(lambda p: p[1] < lang_part_counts['C'],
+        # only accept languages with number of parts not less than number of parts in the default language
+        default_lang = lang_code_func('C') if lang_code_func else 'C'
+        unfit_langs = list(map(lambda p: p[0], filter(lambda p: p[1] < lang_part_counts[default_lang],
                                                       lang_part_counts.items())))
         for lang in unfit_langs:
             self.object.pop(lang)
@@ -88,7 +91,7 @@ class Artifact(Node):
         self.size = {}
         # self.filename = ''
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         """ Parse a <artifact> object """
         self.type = node.get('type')
         self.platform = node.get('platform', '')
@@ -122,7 +125,7 @@ class Release(Node):
         # self.issues = []
         self.artifacts: list[Artifact] = []
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         """ Parse a <release> object """
         if 'timestamp' in node.attrib:
             self.timestamp = int(node.attrib['timestamp'])
@@ -142,7 +145,7 @@ class Release(Node):
         for c3 in node:
             if c3.tag == 'description':
                 self.description = Description()
-                self.description.parse_tree(c3)
+                self.description.parse_tree(c3, lang_code_func)
             elif c3.tag == 'url':
                 t = c3.get('type', 'details')
                 self.url = {t: c3.text.strip()}
@@ -173,7 +176,7 @@ class Image(Node):
         # xml:lang
         self.url = ''
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         """ Parse a <image> object """
         self.type = node.get('type', '')
         self.width = int(node.get('width', 0))
@@ -188,12 +191,12 @@ class Screenshot(Node):
         self.thumbnails = []
         self.source = None
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         """ Parse a <screenshot> object """
         self.default = node.get('type', '') == 'default'
         for c3 in node:
             if c3.tag == 'caption':
-                utils.localize(self.caption, c3)
+                utils.localize(self.caption, c3, lang_code_func=lang_code_func)
             elif c3.tag == 'image':
                 im = Image()
                 im.parse_tree(c3)
@@ -235,7 +238,7 @@ class Provide(Node):
         for v in self.TYPES.values():
             setattr(self, v, [])
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         """ Parse a <provide> object """
         for c2 in node:
             if c2.tag in self.TYPES:
@@ -254,7 +257,7 @@ class ContentRating(Node):
         self.type = ''
         self.attributes = {}
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         self.type = node.get('type', 'oars-1.0')
         for c2 in node:
             if c2.tag == 'content_attribute' and 'id' in c2.attrib:

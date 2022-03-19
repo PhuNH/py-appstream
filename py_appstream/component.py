@@ -61,7 +61,7 @@ class Component(Node):
         # languages, bundle
         self.extends = []
 
-    def parse_tree(self, node):
+    def parse_tree(self, node, lang_code_func=None):
         if isinstance(node, str):
             try:
                 root = ElementTree.fromstring(node)
@@ -78,15 +78,15 @@ class Component(Node):
             if c1.tag in self.JUST_TEXT:
                 setattr(self, c1.tag, val)
             elif c1.tag in self.TO_LOCALIZE:
-                utils.localize(getattr(self, c1.tag), c1)
+                utils.localize(getattr(self, c1.tag), c1, lang_code_func=lang_code_func)
             elif c1.tag in self.TO_PARSE_TREE:
                 setattr(self, c1.tag, self.TO_PARSE_TREE[c1.tag]())
-                (getattr(getattr(self, c1.tag), 'parse_tree'))(c1)
+                (getattr(getattr(self, c1.tag), 'parse_tree'))(c1, lang_code_func=lang_code_func)
             elif c1.tag in self.TO_LIST:
                 for c2 in c1:
                     if c2.tag == self.TO_LIST[c1.tag]['singular']:
                         o = self.TO_LIST[c1.tag]['class']()
-                        o.parse_tree(c2)
+                        o.parse_tree(c2, lang_code_func=lang_code_func)
                         (getattr(getattr(self, c1.tag), 'append'))(o)
             elif c1.tag == 'icon':
                 t = c1.get('type')
