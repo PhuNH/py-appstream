@@ -61,7 +61,7 @@ class Component(Node):
         # languages, bundle
         self.extends = []
 
-    def parse_tree(self, node, lang_code_func=None):
+    def parse_tree(self, node, lang_code_func=None, drop_desktop_id=False):
         if isinstance(node, str):
             try:
                 root = ElementTree.fromstring(node)
@@ -76,6 +76,8 @@ class Component(Node):
         for c1 in root:
             val = c1.text.strip() if c1.text else ''
             if c1.tag in self.JUST_TEXT:
+                if c1.tag == 'id':
+                    val = val.replace('.desktop', '') if drop_desktop_id else val
                 setattr(self, c1.tag, val)
             elif c1.tag in self.TO_LOCALIZE:
                 utils.localize(getattr(self, c1.tag), c1, lang_code_func=lang_code_func)
@@ -113,6 +115,8 @@ class Component(Node):
                 t = c1.get('type')
                 if t not in self.launchable:
                     self.launchable[t] = []
+                if t == 'desktop-id':
+                    val = val.replace('.desktop', '') if drop_desktop_id else val
                 self.launchable[t].append(val)
             elif c1.tag == 'custom':
                 for c2 in c1:
@@ -128,6 +132,7 @@ class Component(Node):
                         kw.append(c2.text.strip())
                 self.keywords[lang] = kw
             elif c1.tag == 'extends':
+                val = val.replace('.desktop', '') if drop_desktop_id else val
                 self.extends.append(val)
 
     def serialize(self):
