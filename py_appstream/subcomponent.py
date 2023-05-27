@@ -46,7 +46,11 @@ class Description(Node):
                     continue
                 if lang not in lang_part_counts:
                     lang_part_counts[lang] = 0
-                self.object[lang] += f'<p>{html.escape(n.text, quote=False)}</p>\n'
+                subtitle = n.get('{http://www.w3.org/XML/1998/namespace}subtitle', "false")
+                if subtitle == "true":
+                    self.object[lang] += f'<h2>{html.escape(n.text, quote=False)}</h2>\n'
+                else:
+                    self.object[lang] += f'<p>{html.escape(n.text, quote=False)}</p>\n'
                 lang_part_counts[lang] += 1
             elif n.tag in ['ol', 'ul']:
                 langs = set()
