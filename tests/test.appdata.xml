@@ -149,4 +149,13 @@
         <release version="1.1" type="development" date="2013-10-20" />
         <release version="1.0" date="2012-08-26" />
     </releases>
+    <custom>
+        <value key="KDE::duplicate_value">value1</value>
+        <value key="KDE::duplicate_value">value2</value>
+        <value key="KDE::windows_store::screenshots::1::image">https://cdn.kde.org/screenshots/neochat/NeoChat-Windows-Timeline.png</value>
+        <value key="KDE::windows_store::screenshots::1::caption">Main view with room list, chat, and room information pane</value>
+        <value key="KDE::windows_store::screenshots::2::image">https://cdn.kde.org/screenshots/neochat/NeoChat-Windows-Login.png</value>
+        <value key="KDE::windows_store::screenshots::2::caption">Login screen</value>
+        <value key="KDE::windows_store::screenshots::2::caption" xml:lang="de">Anmeldebildschirm</value>
+     </custom>
 </component>
