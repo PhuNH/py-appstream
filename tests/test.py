@@ -92,9 +92,20 @@ class ComponentTestCase(unittest.TestCase):
         self.assertEqual(4, len(self.component.screenshots))
         self.assertEqual(3, len(self.component.releases))
         # serialization
-        self.assertEqual(17, len(self.obj.keys()))
+        self.assertEqual(18, len(self.obj.keys()))
         self.assertEqual(4, len(self.obj['Keywords']['C']))
 
+    def test_custom_values(self):
+        custom = self.component.custom
+        self.assertEqual(5, len(custom.keys()))
+        # normal custom value
+        self.assertEqual('https://cdn.kde.org/screenshots/neochat/NeoChat-Windows-Timeline.png', custom.get('KDE::windows_store::screenshots::1::image'))
+        # (localized) custom value without translations
+        self.assertEqual('Main view with room list, chat, and room information pane', custom.get('KDE::windows_store::screenshots::1::caption'))
+        # localized custom value with one translation
+        self.assertEqual({'C': 'Login screen', 'de': 'Anmeldebildschirm'}, custom.get('KDE::windows_store::screenshots::2::caption'))
+        # duplicate entry of (unlocalized) custom value
+        self.assertEqual('value2', custom.get('KDE::duplicate_value'))
 
 if __name__ == '__main__':
     unittest.main()
