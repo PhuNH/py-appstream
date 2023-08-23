@@ -121,22 +121,7 @@ class Component(Node):
             elif c1.tag == 'custom':
                 for c2 in c1:
                     if c2.tag == 'value' and 'key' in c2.attrib:
-                        key = c2.get('key')
-                        lang = c2.get('{http://www.w3.org/XML/1998/namespace}lang', c2.attrib.get('lang'))
-                        if lang is None and (key not in self.custom or isinstance(self.custom[key], str)):
-                            # add as simple string
-                            self.custom[key] = c2.text.strip()
-                        else:
-                            # add as language-value dict
-                            values = self.custom.get(key)
-                            if values is None:
-                                values = {}
-                            elif isinstance(values, str):
-                                # convert existing string value to dict value
-                                clang = lang_code_func('C') if lang_code_func else 'C'
-                                values = {clang: values}
-                            utils.localize(values, c2, lang_code_func=lang_code_func)
-                            self.custom[key] = values
+                        self.custom[c2.get('key')] = c2.text.strip()
             elif c1.tag == 'pkgname':
                 self.pkgname = val
             elif c1.tag == 'keywords':
