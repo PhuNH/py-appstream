@@ -53,10 +53,13 @@ class ComponentTestCase(unittest.TestCase):
         self.assertEqual('O l\'actiu La comunitat d\'artistes del Krita anchor', screenshots[2].caption['ca'])
         # Exclude empty string
         self.assertEqual({'C', 'ca'}, set(screenshots[2].caption.keys()))
+        # x-kde-os attribute
+        self.assertEqual('windows', self.component.screenshots[4].os)
         # serialization
         self.assertIn('source-image', self.obj['Screenshots'][0])
         self.assertEqual('https://gcompris.net/screenshots_qt/large/color_mix.png',
                          self.obj['Screenshots'][3]['source-image']['url'])
+        self.assertEqual('windows', self.obj['Screenshots'][4]['os'])
 
     def test_provide(self):
         provide = self.component.provides
@@ -89,7 +92,7 @@ class ComponentTestCase(unittest.TestCase):
         self.assertEqual('KDE', self.component.project_group)
         self.assertEqual(5, len(self.component.name.keys()))
         self.assertEqual({}, self.component.developer_name)
-        self.assertEqual(4, len(self.component.screenshots))
+        self.assertEqual(5, len(self.component.screenshots))
         self.assertEqual(3, len(self.component.releases))
         # serialization
         self.assertEqual(17, len(self.obj.keys()))
