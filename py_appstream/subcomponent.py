@@ -190,12 +190,12 @@ class Screenshot(Node):
         self.caption = {}
         self.thumbnails = []
         self.source = None
-        self.os = ''
+        self.environment = ''
 
     def parse_tree(self, node, lang_code_func=None):
         """ Parse a <screenshot> object """
         self.default = node.get('type', '') == 'default'
-        self.os = node.get('x-kde-os', '')
+        self.environment = node.get('environment', '')
         for c3 in node:
             if c3.tag == 'caption':
                 utils.localize(self.caption, c3, lang_code_func=lang_code_func)

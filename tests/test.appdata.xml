@@ -108,7 +108,7 @@
             <caption xml:lang="x-test">xx"Mixing color of paint" activityxx</caption>
             <image width="1600" height="1040">https://gcompris.net/screenshots_qt/large/color_mix.png</image>
         </screenshot>
-        <screenshot x-kde-os="windows">
+        <screenshot environment="windows">
             <caption>Main view with room list, chat, and room information pane</caption>
             <image>https://cdn.kde.org/screenshots/neochat/NeoChat-Windows-Timeline.png</image>
         </screenshot>
