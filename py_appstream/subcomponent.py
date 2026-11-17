@@ -40,13 +40,14 @@ class Description(Node):
     def parse_tree(self, node, lang_code_func=None):
         lang_part_counts = {}
         for n in node:
-            if n.tag == 'p':
+            if n.tag in ['p', 'heading']:
                 lang = self._prep_lang(n, lang_code_func)
                 if lang == 'x-test':
                     continue
                 if lang not in lang_part_counts:
                     lang_part_counts[lang] = 0
-                self.object[lang] += f'<p>{html.escape(n.text, quote=False)}</p>\n'
+                tag = 'p' if n.tag == 'p' else 'h3'
+                self.object[lang] += f'<{tag}>{html.escape(n.text, quote=False)}</{tag}>\n'
                 lang_part_counts[lang] += 1
             elif n.tag in ['ol', 'ul']:
                 langs = set()
@@ -67,7 +68,7 @@ class Description(Node):
                 for lang in langs:
                     self.object[lang] += f'</{n.tag}>\n'
             else:
-                raise AppStreamParseError(f'Expected <p>, <ul>, <ol> in <{node.tag}>, got <{n.tag}>')
+                raise AppStreamParseError(f'Expected <p>, <ul>, <ol>, <heading> in <{node.tag}>, got <{n.tag}>')
         # only accept languages with number of parts not less than number of parts in the default language
         default_lang = lang_code_func('C') if lang_code_func else 'C'
         unfit_langs = list(map(lambda p: p[0], filter(lambda p: p[1] < lang_part_counts[default_lang],
